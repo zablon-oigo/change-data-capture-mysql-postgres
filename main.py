@@ -1,15 +1,29 @@
-from fastapi import FastAPI, Header, status
-from  typing import Optional, List
-from fastapi.exceptions import HTTPException
-from pydantic import BaseModel
+from fastapi import FastAPI, Header, status, Request
+from typing import Optional
+from contextlib import asynccontextmanager
 
-app=FastAPI()
+from src.books.routes import book_router
+from src.db.main import initdb
+from src.db.redis import init_redis
+from src.errors import BookException
+from fastapi.responses import JSONResponse
 
-@app.get("/")
-def index():
-    return{"Hello World"}
+API_VERSION = "v1"
 
-@app.get('/get_headers')
+
+app = FastAPI(
+    title="Book CRUD API",
+    description="A RESTful API for a book review web service",
+    version=API_VERSION
+)
+
+@app.get("/", status_code=status.HTTP_200_OK, tags=["Root"])
+async def index():
+    """health check."""
+    return {"message": "Hello, World"}
+
+
+@app.get("/get_headers",status_code=status.HTTP_200_OK, tags=["Debug"])
 async def get_all_request_headers(
     user_agent: Optional[str] = Header(None),
     accept_encoding: Optional[str] = Header(None),
@@ -18,13 +32,18 @@ async def get_all_request_headers(
     accept_language: Optional[str] = Header(None),
     host: Optional[str] = Header(None),
 ):
-    request_headers = {}
-    request_headers["User-Agent"] = user_agent
-    request_headers["Accept-Encoding"] = accept_encoding
-    request_headers["Referer"] = referer
-    request_headers["Accept-Language"] = accept_language
-    request_headers["Connection"] = connection
-    request_headers["Host"] = host
+    """Return all request headers for debugging."""
+    return {
+        "User-Agent": user_agent,
+        "Accept-Encoding": accept_encoding,
+        "Referer": referer,
+        "Accept-Language": accept_language,
+        "Connection": connection,
+        "Host": host,
+    }
 
-    return request_headers
-
+app.include_router(
+    book_router,
+    prefix=f"/api/{API_VERSION}",
+    tags=["Books"],
+)
