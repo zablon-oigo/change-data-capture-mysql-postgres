@@ -27,6 +27,13 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+@app.exception_handler(BookException)
+async def book_exception_handler(request: Request, exc: BookException):
+    return JSONResponse(
+        status_code=getattr(exc, "status_code", status.HTTP_400_BAD_REQUEST),
+        content={"detail": getattr(exc, "detail", "An error occurred")},
+    )
+
 @app.get("/", status_code=status.HTTP_200_OK, tags=["Root"])
 async def index():
     """health check."""
