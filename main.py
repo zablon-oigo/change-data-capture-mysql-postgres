@@ -10,11 +10,21 @@ from fastapi.responses import JSONResponse
 
 API_VERSION = "v1"
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Initialize database and Redis when app starts."""
+    print("Starting server... initializing database and Redis")
+    await initdb()
+    await init_redis()
+    yield
+    print("Server is stopping...")
+
 
 app = FastAPI(
     title="Book CRUD API",
     description="A RESTful API for a book review web service",
-    version=API_VERSION
+    version=API_VERSION,
+    lifespan=lifespan
 )
 
 @app.get("/", status_code=status.HTTP_200_OK, tags=["Root"])
