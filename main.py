@@ -3,12 +3,18 @@ from typing import Optional
 from contextlib import asynccontextmanager
 
 from src.books.routes import book_router
+from src.auth.routes import auth_router
+from src.reviews.routes import review_router
+from src.tags.routes import tags_router
 from src.db.main import initdb
 from src.db.redis import init_redis
 from src.errors import BookException
 from fastapi.responses import JSONResponse
+from src.errors import register_error_handlers
+from src.middleware import register_middleware
 
-API_VERSION = "v1"
+version = "v1"
+version_prefix ="/api/{version}"
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -23,9 +29,15 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="Book CRUD API",
     description="A RESTful API for a book review web service",
-    version=API_VERSION,
-    lifespan=lifespan
+    version=version,
+    lifespan=lifespan,
+    openapi_url=f"{version_prefix}/openapi.json",
+    docs_url=f"{version_prefix}/docs",
+    redoc_url=f"{version_prefix}/redoc"
 )
+
+register_error_handlers(app)
+register_middleware(app)
 
 @app.exception_handler(BookException)
 async def book_exception_handler(request: Request, exc: BookException):
@@ -58,9 +70,7 @@ async def get_all_request_headers(
         "Connection": connection,
         "Host": host,
     }
-
-app.include_router(
-    book_router,
-    prefix=f"/api/{API_VERSION}",
-    tags=["Books"],
-)
+app.include_router(auth_router, prefix=f"{version_prefix}/auth", tags=["Auth"])
+app.include_router(book_router, prefix=f"{version_prefix}/books", tags=["Books"])
+app.include_router(review_router, prefix=f"{version_prefix}/reviews", tags=["Reviews"])
+app.include_router(tags_router, prefix=f"{version_prefix}/tags", tags=["Tags"])
