@@ -5,8 +5,23 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "aiomysql>=0.3.2",
+    "alembic>=1.17.1",
+    "asgiref>=3.10.0",
+    "celery>=5.5.3",
+    "confluent-kafka>=2.12.2",
+    "fastapi-mail>=1.5.8",
     "fastapi[standard]>=0.121.0",
+    "flower>=2.0.1",
     "httpie>=3.2.4",
+    "itsdangerous>=2.2.0",
+    "passlib>=1.7.4",
     "psycopg2>=2.9.11",
+    "pydantic-settings>=2.11.0",
+    "pyjwt[crypto]>=2.10.1",
+    "pymysql>=1.1.2",
+    "python-dotenv>=1.2.1",
+    "redis>=7.0.1",
+    "sqlmodel>=0.0.27",
     "streamlit>=1.51.0",
 ]
