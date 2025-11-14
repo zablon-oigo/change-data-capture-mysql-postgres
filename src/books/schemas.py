@@ -24,3 +24,23 @@ class BookCreateModel(BaseModel):
             }
         }
     }
+
+
+class BookUpdateModel(BaseModel):
+    title: Optional[str] = None
+    author: Optional[str] = None
+    publisher: Optional[str] = None
+    page_count: Optional[int] = None
+    language: Optional[str] = None
+
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "title": "The Great Gatsby",
+                "author": "F. Scott Fitzgerald",
+                "publisher": "Scribner",
+                "page_count": 218,
+                "language": "English"
+            }
+        }
+    }
