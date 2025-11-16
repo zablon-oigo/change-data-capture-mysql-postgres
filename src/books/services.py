@@ -17,3 +17,17 @@ class BookService:
         statement = select(Book).where(Book.uid == book_uid)
         result = await session.exec(statement)
         return result.first()
+
+    async def create_book(self, book_data: BookCreateModel, session: AsyncSession):
+        """Create a new book record."""
+        new_book = Book(**book_data.model_dump())
+        if isinstance(new_book.published_date, str):
+            new_book.published_date = datetime.strptime(
+                new_book.published_date, "%Y-%m-%d"
+            )
+
+        session.add(new_book)
+        await session.commit()
+        await session.refresh(new_book)
+
+        return new_book
