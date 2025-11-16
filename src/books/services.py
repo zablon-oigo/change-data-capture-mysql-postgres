@@ -11,3 +11,9 @@ class BookService:
         statement = select(Book).order_by(desc(Book.created_at))
         result = await session.exec(statement)
         return result.all()
+    
+    async def get_book(self, book_uid: str, session: AsyncSession):
+        """Fetch a single book by UID."""
+        statement = select(Book).where(Book.uid == book_uid)
+        result = await session.exec(statement)
+        return result.first()
