@@ -31,3 +31,20 @@ class BookService:
         await session.refresh(new_book)
 
         return new_book
+        
+    async def update_book(
+        self, book_uid: str, update_data: BookUpdateModel, session: AsyncSession
+    ):
+        """Update an existing book record."""
+        book_to_update = await self.get_book(book_uid, session)
+
+        if not book_to_update:
+            return None
+
+        for field, value in update_data.model_dump(exclude_unset=True).items():
+            setattr(book_to_update, field, value)
+
+        await session.commit()
+        await session.refresh(book_to_update) 
+
+        return book_to_update
