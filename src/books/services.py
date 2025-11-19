@@ -48,15 +48,3 @@ class BookService:
         await session.refresh(book_to_update) 
 
         return book_to_update
-
-    async def delete_book(self, book_uid: str, session: AsyncSession):
-        """Delete a book record by UID."""
-        book_to_delete = await self.get_book(book_uid, session)
-
-        if not book_to_delete:
-            return None
-
-        await session.delete(book_to_delete)
-        await session.commit()
-
-        return {"deleted": True}
