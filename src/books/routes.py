@@ -8,3 +8,10 @@ from src.auth.dependencies import AccessTokenBearer, RoleChecker
 
 access_token_bearer = AccessTokenBearer()
 book_service = BookService()
+
+user_or_admin_checker = RoleChecker(["admin", "user"])  
+admin_checker = RoleChecker(["admin"])                
+
+book_router = APIRouter(
+    dependencies=[Depends(access_token_bearer)]
+)
