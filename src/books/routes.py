@@ -15,3 +15,7 @@ admin_checker = RoleChecker(["admin"])
 book_router = APIRouter(
     dependencies=[Depends(access_token_bearer)]
 )
+
+@book_router.get("/protected", dependencies=[Depends(user_or_admin_checker)])
+async def protected_endpoint():
+    return {"message": "You have access"}
