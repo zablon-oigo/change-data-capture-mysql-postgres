@@ -19,3 +19,12 @@ book_router = APIRouter(
 @book_router.get("/protected", dependencies=[Depends(user_or_admin_checker)])
 async def protected_endpoint():
     return {"message": "You have access"}
+
+
+@book_router.get("/", response_model=list[BookReadModel], status_code=status.HTTP_200_OK)
+async def get_all_books(
+    session: AsyncSession = Depends(get_session),
+    _: bool = Depends(user_or_admin_checker) 
+):
+    books = await book_service.get_all_books(session)
+    return books
