@@ -51,3 +51,12 @@ async def create_book(
 ):
     new_book = await book_service.create_book(book_data, session)
     return new_book
+
+
+@book_router.patch("/{book_uid}", response_model=BookReadModel, status_code=status.HTTP_200_OK)
+async def update_book(
+    book_uid: str, 
+    update_data: BookUpdateModel, 
+    session: AsyncSession = Depends(get_session),
+    _: bool = Depends(admin_checker) 
+):
