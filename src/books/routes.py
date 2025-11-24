@@ -64,3 +64,14 @@ async def update_book(
         if not updated_book:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Book not found")
         return updated_book
+
+@book_router.delete("/{book_uid}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_book(
+    book_uid: str, 
+    session: AsyncSession = Depends(get_session),
+    _: bool = Depends(admin_checker)  
+):
+    deleted = await book_service.delete_book(book_uid, session)
+    if not deleted:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Book not found")
+    return {}
