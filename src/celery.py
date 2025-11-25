@@ -16,4 +16,10 @@ c_app.config_from_object("src.config")
 
 
 
+@c_app.task(name="send_email_task")
+def send_email(recipients: List[str], subject: str, body: str) -> None:
 
+    message = create_message(recipients=recipients, subject=subject, body=body)
+    async_to_sync(mail.send_message)(message)
+
+    print(f"Email sent to: {', '.join(recipients)}")
