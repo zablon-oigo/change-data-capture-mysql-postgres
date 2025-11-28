@@ -23,3 +23,13 @@ def register_middleware(app: FastAPI) -> None:
             f"{client_host}:{client_port} - {request.method} {request.url.path} "
             f"→ {response.status_code} (completed in {process_time:.3f}s)"
         )
+        print(log_message)  
+        return response
+
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],     
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
