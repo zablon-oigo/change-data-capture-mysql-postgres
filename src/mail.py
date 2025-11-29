@@ -15,3 +15,19 @@ mail_config = ConnectionConfig(
     USE_CREDENTIALS=True,
     VALIDATE_CERTS=True,     
 )
+
+mail = FastMail(mail_config)
+
+
+def create_message(
+    recipients: list[str],
+    subject: str,
+    body: str,
+    subtype: MessageType = MessageType.html,
+) -> MessageSchema:
+    return MessageSchema(
+        subject=subject,
+        recipients=recipients,
+        body=body,
+        subtype=subtype,
+    )
