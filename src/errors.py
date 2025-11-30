@@ -10,3 +10,8 @@ class BookException(Exception):
         if detail:
             self.detail = detail
         super().__init__(self.detail)
+
+class InvalidToken(BookException):
+    status_code = 401
+    detail = "User has provided an invalid or expired token"
+
