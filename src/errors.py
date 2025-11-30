@@ -15,3 +15,6 @@ class InvalidToken(BookException):
     status_code = 401
     detail = "User has provided an invalid or expired token"
 
+class UserAlreadyExists(BookException):
+    status_code = 409
+    detail = "User already exists with this email"
