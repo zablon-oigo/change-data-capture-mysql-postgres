@@ -24,3 +24,6 @@ class AccountNotVerified(Exception):
     pass
 
 
+class BookNotFound(BookException):
+    status_code = 404
+    detail = "Book not found"
