@@ -18,3 +18,9 @@ class InvalidToken(BookException):
 class UserAlreadyExists(BookException):
     status_code = 409
     detail = "User already exists with this email"
+
+class AccountNotVerified(Exception):
+    """Exception raised when the user account is not verified."""
+    pass
+
+
