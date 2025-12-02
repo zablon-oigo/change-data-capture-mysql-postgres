@@ -27,3 +27,7 @@ class AccountNotVerified(Exception):
 class BookNotFound(BookException):
     status_code = 404
     detail = "Book not found"
+
+class TagAlreadyExists(BookException):
+    status_code = 409
+    detail = "Tag already exists"
