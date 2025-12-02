@@ -31,3 +31,7 @@ class BookNotFound(BookException):
 class TagAlreadyExists(BookException):
     status_code = 409
     detail = "Tag already exists"
+
+class TagNotFound(BookException):
+    status_code = 404
+    detail = "Tag not found"
