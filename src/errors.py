@@ -35,3 +35,8 @@ class TagAlreadyExists(BookException):
 class TagNotFound(BookException):
     status_code = 404
     detail = "Tag not found"
+
+class InvalidCredentials(BookException):
+    status_code = 400
+    detail = "Invalid email or password"
+
