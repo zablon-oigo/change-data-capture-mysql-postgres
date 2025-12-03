@@ -40,3 +40,7 @@ class InvalidCredentials(BookException):
     status_code = 400
     detail = "Invalid email or password"
 
+class UserNotFound(BookException):
+    status_code = 404
+    detail = "User not found"
+
