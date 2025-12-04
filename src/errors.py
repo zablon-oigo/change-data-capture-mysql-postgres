@@ -44,3 +44,7 @@ class UserNotFound(BookException):
     status_code = 404
     detail = "User not found"
 
+class RevokedToken(BookException):
+    status_code = 401
+    detail = "Token has been revoked"
+
