@@ -48,3 +48,6 @@ class RevokedToken(BookException):
     status_code = 401
     detail = "Token has been revoked"
 
+class AccessTokenRequired(BookException):
+    status_code = 401
+    detail = "Access token required"
