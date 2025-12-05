@@ -56,3 +56,6 @@ class RefreshTokenRequired(BookException):
     status_code = 403
     detail = "Refresh token required"
 
+class InsufficientPermission(BookException):
+    status_code = 401
+    detail = "Insufficient permission"
