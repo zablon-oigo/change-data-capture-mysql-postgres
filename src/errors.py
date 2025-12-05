@@ -51,3 +51,8 @@ class RevokedToken(BookException):
 class AccessTokenRequired(BookException):
     status_code = 401
     detail = "Access token required"
+
+class RefreshTokenRequired(BookException):
+    status_code = 403
+    detail = "Refresh token required"
+
