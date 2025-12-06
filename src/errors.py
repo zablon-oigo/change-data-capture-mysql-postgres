@@ -68,3 +68,16 @@ def create_exception_handler(status_code: int, initial_detail: dict):
             content=initial_detail
         )
     return handler
+
+
+def register_error_handlers(app: FastAPI):
+    app.add_exception_handler(
+        UserAlreadyExists,
+        create_exception_handler(
+            status_code=status.HTTP_409_CONFLICT,
+            initial_detail={
+                "message": "User with email already exists",
+                "error_code": "user_exists",
+            },
+        ),
+    )
