@@ -59,3 +59,12 @@ class RefreshTokenRequired(BookException):
 class InsufficientPermission(BookException):
     status_code = 401
     detail = "Insufficient permission"
+
+
+def create_exception_handler(status_code: int, initial_detail: dict):
+    async def handler(request: Request, exc: Exception):
+        return JSONResponse(
+            status_code=status_code,
+            content=initial_detail
+        )
+    return handler
