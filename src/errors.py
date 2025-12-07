@@ -95,3 +95,14 @@ def register_all_errors(app: FastAPI):
             },
         ),
     )
+
+    app.add_exception_handler(
+        UserNotFound,
+        create_exception_handler(
+            status_code=status.HTTP_404_NOT_FOUND,
+            initial_detail={
+                "message": "User not found",
+                "error_code": "user_not_found",
+            },
+        ),
+    )
