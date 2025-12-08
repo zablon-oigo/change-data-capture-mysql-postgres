@@ -128,5 +128,16 @@ def register_all_errors(app: FastAPI):
             },
         ),
     )
+    app.add_exception_handler(
+        InvalidToken,
+        create_exception_handler(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            initial_detail={
+                "message": "Token is invalid or expired",
+                "resolution": "Please get a new token",
+                "error_code": "invalid_token",
+            },
+        ),
+    )
 
 
