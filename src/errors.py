@@ -118,3 +118,15 @@ def register_all_errors(app: FastAPI):
         ),
     )
 
+    app.add_exception_handler(
+        InvalidCredentials,
+        create_exception_handler(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            initial_detail={
+                "message": "Invalid email or password",
+                "error_code": "invalid_credentials",
+            },
+        ),
+    )
+
+
