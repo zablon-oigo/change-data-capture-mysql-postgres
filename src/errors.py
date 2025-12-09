@@ -153,5 +153,17 @@ def register_all_errors(app: FastAPI):
     )
 
 
+    app.add_exception_handler(
+        AccessTokenRequired,
+        create_exception_handler(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            initial_detail={
+                "message": "Access token required",
+                "error_code": "access_token_required",
+            },
+        ),
+    )
+
+
 
 
