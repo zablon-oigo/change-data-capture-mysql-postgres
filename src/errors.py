@@ -140,4 +140,18 @@ def register_all_errors(app: FastAPI):
         ),
     )
 
+    app.add_exception_handler(
+        RevokedToken,
+        create_exception_handler(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            initial_detail={
+                "message": "Token has been revoked",
+                "resolution": "Please log in again",
+                "error_code": "revoked_token",
+            },
+        ),
+    )
+
+
+
 
