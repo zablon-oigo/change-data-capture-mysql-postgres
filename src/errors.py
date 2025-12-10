@@ -166,4 +166,13 @@ def register_all_errors(app: FastAPI):
 
 
 
-
+    app.add_exception_handler(
+        RefreshTokenRequired,
+        create_exception_handler(
+            status_code=status.HTTP_403_FORBIDDEN,
+            initial_detail={
+                "message": "Refresh token required",
+                "error_code": "refresh_token_required",
+            },
+        ),
+    )
