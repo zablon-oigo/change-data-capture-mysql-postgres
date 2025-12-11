@@ -189,3 +189,10 @@ def register_all_errors(app: FastAPI):
         ),
     )
 
+    app.add_exception_handler(
+        TagNotFound,
+        create_exception_handler(
+            status_code=status.HTTP_404_NOT_FOUND,
+            initial_detail={"message": "Tag not found", "error_code": "tag_not_found"},
+        ),
+    )
