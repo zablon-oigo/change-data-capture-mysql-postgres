@@ -196,3 +196,14 @@ def register_all_errors(app: FastAPI):
             initial_detail={"message": "Tag not found", "error_code": "tag_not_found"},
         ),
     )
+
+    app.add_exception_handler(
+        TagAlreadyExists,
+        create_exception_handler(
+            status_code=status.HTTP_409_CONFLICT,
+            initial_detail={
+                "message": "Tag already exists",
+                "error_code": "tag_exists",
+            },
+        ),
+    )
