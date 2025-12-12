@@ -28,3 +28,15 @@ class ReviewModel(BaseModel):
     }
 
 
+class ReviewCreateModel(BaseModel):
+    rating: int = Field(..., le=5, description="Rating for the book, max value 5")
+    review_text: str
+
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "rating": 4,
+                "review_text": "Really enjoyed this book!"
+            }
+        }
+    }
