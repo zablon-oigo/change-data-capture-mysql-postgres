@@ -29,3 +29,20 @@ async def get_review(review_uid: str, session: AsyncSession = Depends(get_sessio
     if not review:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Review not found")
     return review
+
+
+@review_router.post("/book/{book_uid}", response_model=ReviewModel, dependencies=[user_role_checker])
+async def add_review_to_book(
+    book_uid: str,
+    review_data: ReviewCreateModel,
+    current_user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+):
+    """Add a review to a book (owner = current user)."""
+    new_review = await review_service.add_review_to_book(
+        user_email=current_user.email,
+        review_data=review_data,
+        book_uid=book_uid,
+        session=session,
+    )
+    return new_review
