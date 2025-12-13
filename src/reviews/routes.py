@@ -20,3 +20,12 @@ async def get_all_reviews(session: AsyncSession = Depends(get_session)):
     """Admin only: Get all reviews."""
     reviews = await review_service.get_all_reviews(session)
     return reviews
+
+
+@review_router.get("/{review_uid}", response_model=ReviewModel, dependencies=[user_role_checker])
+async def get_review(review_uid: str, session: AsyncSession = Depends(get_session)):
+    """Get a specific review by UID."""
+    review = await review_service.get_review(review_uid, session)
+    if not review:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Review not found")
+    return review
