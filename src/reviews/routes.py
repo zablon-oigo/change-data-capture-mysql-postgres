@@ -46,3 +46,18 @@ async def add_review_to_book(
         session=session,
     )
     return new_review
+
+
+@review_router.delete("/{review_uid}", dependencies=[user_role_checker], status_code=status.HTTP_204_NO_CONTENT)
+async def delete_review(
+    review_uid: str,
+    current_user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+):
+    """Delete a review if owner or admin."""
+    await review_service.delete_review_from_book(
+        review_uid=review_uid,
+        user_email=current_user.email,
+        session=session
+    )
+    return {"message": "Review deleted successfully"}
