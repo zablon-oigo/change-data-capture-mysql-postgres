@@ -33,3 +33,16 @@ class TagCreateModel(BaseModel):
     }
 
 
+class TagAddModel(BaseModel):
+    tags: List[TagCreateModel]
+
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "tags": [
+                    {"name": "Fiction"},
+                    {"name": "Adventure"}
+                ]
+            }
+        }
+    }
