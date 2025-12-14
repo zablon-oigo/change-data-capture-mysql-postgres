@@ -21,3 +21,15 @@ class TagModel(BaseModel):
     }
 
 
+class TagCreateModel(BaseModel):
+    name: str
+
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "name": "Fiction"
+            }
+        }
+    }
+
+
