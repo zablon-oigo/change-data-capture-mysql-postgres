@@ -57,3 +57,14 @@ async def update_tag(
     session: AsyncSession = Depends(get_session),
 ) -> TagModel:
     return await tag_service.update_tag(tag_uid, tag_update_data, session)
+
+
+
+@tags_router.delete(
+    "/{tag_uid}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    dependencies=[user_role_checker],
+)
+async def delete_tag(tag_uid: str, session: AsyncSession = Depends(get_session)) -> None:
+    await tag_service.delete_tag(tag_uid, session)
+    return None  
