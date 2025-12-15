@@ -47,3 +47,13 @@ async def add_tags_to_book(
         book_uid=book_uid, tag_data=tag_data, session=session
     )
 
+
+@tags_router.put(
+    "/{tag_uid}", response_model=TagModel, dependencies=[user_role_checker]
+)
+async def update_tag(
+    tag_uid: str,
+    tag_update_data: TagCreateModel,
+    session: AsyncSession = Depends(get_session),
+) -> TagModel:
+    return await tag_service.update_tag(tag_uid, tag_update_data, session)
