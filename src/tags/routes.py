@@ -18,3 +18,15 @@ user_role_checker = Depends(RoleChecker(["user", "admin"]))
 @tags_router.get("/", response_model=List[TagModel], dependencies=[user_role_checker])
 async def get_all_tags(session: AsyncSession = Depends(get_session)):
     return await tag_service.get_tags(session)
+
+
+@tags_router.post(
+    "/",
+    response_model=TagModel,
+    status_code=status.HTTP_201_CREATED,
+    dependencies=[user_role_checker],
+)
+async def add_tag(
+    tag_data: TagCreateModel, session: AsyncSession = Depends(get_session)
+) -> TagModel:
+    return await tag_service.add_tag(tag_data=tag_data, session=session)
