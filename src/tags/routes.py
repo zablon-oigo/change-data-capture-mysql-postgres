@@ -30,3 +30,20 @@ async def add_tag(
     tag_data: TagCreateModel, session: AsyncSession = Depends(get_session)
 ) -> TagModel:
     return await tag_service.add_tag(tag_data=tag_data, session=session)
+
+
+@tags_router.post(
+    "/book/{book_uid}/tags",
+    response_model=BookReadModel,
+    status_code=status.HTTP_200_OK,
+    dependencies=[user_role_checker],
+)
+async def add_tags_to_book(
+    book_uid: str,
+    tag_data: TagAddModel, 
+    session: AsyncSession = Depends(get_session),
+) -> BookReadModel:
+    return await tag_service.add_tags_to_book(
+        book_uid=book_uid, tag_data=tag_data, session=session
+    )
+
