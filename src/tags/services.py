@@ -17,3 +17,25 @@ class TagService:
         statement = select(Tag).order_by(desc(Tag.created_at))
         result = await session.exec(statement)
         return result.all()
+    
+
+    async def add_tags_to_book(
+        self, book_uid: str, tag_data: TagAddModel, session: AsyncSession
+    ):
+        """Add tags to a book"""
+        book = await book_service.get_book(book_uid=book_uid, session=session)
+        if not book:
+            raise HTTPException(status_code=404, detail="Book not found")
+
+        for tag_item in tag_data.tags:
+            result = await session.exec(select(Tag).where(Tag.name == tag_item.name))
+            tag = result.one_or_none()
+            if not tag:
+                tag = Tag(name=tag_item.name)
+            if tag not in book.tags:
+                book.tags.append(tag)
+
+        session.add(book)
+        await session.commit()
+        await session.refresh(book)
+        return book
