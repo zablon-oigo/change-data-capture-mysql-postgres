@@ -45,3 +45,20 @@ class TagService:
         statement = select(Tag).where(Tag.uid == tag_uid)
         result = await session.exec(statement)
         return result.first()
+    
+
+    async def add_tag(self, tag_data: TagCreateModel, session: AsyncSession):
+        """Create a tag"""
+        statement = select(Tag).where(Tag.name == tag_data.name)
+        result = await session.exec(statement)
+        tag = result.first()
+        if tag:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN, detail="Tag exists"
+            )
+
+        new_tag = Tag(name=tag_data.name)
+        session.add(new_tag)
+        await session.commit()
+        await session.refresh(new_tag)
+        return new_tag
