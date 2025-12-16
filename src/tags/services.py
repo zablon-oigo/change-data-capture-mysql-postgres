@@ -62,3 +62,23 @@ class TagService:
         await session.commit()
         await session.refresh(new_tag)
         return new_tag
+    
+
+    async def update_tag(
+        self, tag_uid: str, tag_update_data: TagCreateModel, session: AsyncSession
+    ):
+        """Update a tag"""
+        tag = await self.get_tag_by_uid(tag_uid, session)
+        if not tag:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Tag does not exist"
+            )
+
+        update_data_dict = tag_update_data.model_dump()
+        for k, v in update_data_dict.items():
+            setattr(tag, k, v)
+
+        session.add(tag)
+        await session.commit()
+        await session.refresh(tag)
+        return tag
