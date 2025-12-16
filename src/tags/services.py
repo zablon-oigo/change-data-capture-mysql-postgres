@@ -39,3 +39,9 @@ class TagService:
         await session.commit()
         await session.refresh(book)
         return book
+
+    async def get_tag_by_uid(self, tag_uid: str, session: AsyncSession):
+        """Get tag by uid"""
+        statement = select(Tag).where(Tag.uid == tag_uid)
+        result = await session.exec(statement)
+        return result.first()
