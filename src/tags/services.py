@@ -82,3 +82,14 @@ class TagService:
         await session.commit()
         await session.refresh(tag)
         return tag
+
+    async def delete_tag(self, tag_uid: str, session: AsyncSession):
+        """Delete a tag"""
+        tag = await self.get_tag_by_uid(tag_uid, session)
+        if not tag:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Tag does not exist"
+            )
+
+        await session.delete(tag)
+        await session.commit()
