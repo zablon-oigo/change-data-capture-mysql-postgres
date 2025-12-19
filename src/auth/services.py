@@ -13,3 +13,7 @@ class UserService:
         statement = select(User).where(User.email == email)
         result = await session.exec(statement)
         return result.first()
+    async def user_exists(self, email: str, session: AsyncSession) -> bool:
+        """Check if a user already exists."""
+        user = await self.get_user_by_email(email, session)
+        return user is not None
