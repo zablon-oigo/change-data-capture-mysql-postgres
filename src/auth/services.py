@@ -17,3 +17,8 @@ class UserService:
         """Check if a user already exists."""
         user = await self.get_user_by_email(email, session)
         return user is not None
+
+    async def get_all_users(self, session: AsyncSession):
+        result = await session.execute(select(User))
+        users = result.scalars().all()
+        return users
