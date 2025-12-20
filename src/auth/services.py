@@ -37,3 +37,8 @@ class UserService:
             is_verified=user_dict.get("is_verified", False),
             created_at=datetime.utcnow(),
         )
+        session.add(new_user)
+        await session.commit()
+        await session.refresh(new_user)
+
+        return new_user
