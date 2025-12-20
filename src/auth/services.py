@@ -51,3 +51,16 @@ class UserService:
         await session.refresh(user)
         return user
     
+    async def delete_user(self, user_uid: str, session: AsyncSession) -> bool:
+            """
+            Delete a user by UID.
+            """
+            result = await session.execute(select(User).where(User.uid == user_uid))
+            user = result.scalar_one_or_none()
+
+            if not user:
+                return False
+
+            await session.delete(user)
+            await session.commit()
+            return True
