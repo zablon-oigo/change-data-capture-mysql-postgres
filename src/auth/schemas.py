@@ -43,3 +43,8 @@ class UserModel(BaseModel):
     model_config={
         "form_attributes": True
     }
+
+
+class SignupResponseModel(BaseModel):
+    message: str
+    user: UserModel
