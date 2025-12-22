@@ -48,3 +48,10 @@ class UserModel(BaseModel):
 class SignupResponseModel(BaseModel):
     message: str
     user: UserModel
+
+
+class UserBooksModel(UserModel):
+    books: List[BookReadModel] = []  
+
+class EmailModel(BaseModel):
+    addresses : List[str]
