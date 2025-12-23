@@ -70,6 +70,35 @@ async def create_user_account(
     }
 
 
+@auth_router.get("/verify/{token}", status_code=status.HTTP_200_OK)
+async def verify_user_account(token: str, session: AsyncSession = Depends(get_session)):
+
+    token_data = decode_url_safe_token(token)
+
+    if not token_data or "email" not in token_data:
+        return JSONResponse(
+            content={"message": "Invalid or expired verification link"},
+            status_code=status.HTTP_400_BAD_REQUEST,
+        )
+
+    user_email = token_data["email"].lower()
+    user = await user_service.get_user_by_email(user_email, session)
+
+    if not user:
+        raise UserNotFound()
+
+    if user.is_verified:
+        return JSONResponse(
+            content={"message": "Account already verified"},
+            status_code=status.HTTP_200_OK,
+        )
+    await user_service.update_user(user, {"is_verified": True}, session)
+
+    return JSONResponse(
+        content={"message": "Account verified successfully.You can now log in."},
+        status_code=status.HTTP_200_OK,
+    )
+
 
 
 
