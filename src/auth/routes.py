@@ -100,6 +100,11 @@ async def verify_user_account(token: str, session: AsyncSession = Depends(get_se
     )
 
 
+@auth_router.get("/me", response_model=UserBooksModel)
+async def me(
+    user=Depends(get_current_user), _: bool = Depends(role_checker)
+):
+    return user
 
 
 
