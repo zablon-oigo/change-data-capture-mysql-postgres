@@ -59,3 +59,17 @@ class EmailModel(BaseModel):
 
 class PasswordResetRequestModel(BaseModel):
     email: str
+
+
+class PasswordResetConfirmModel(BaseModel):
+    new_password: str
+    confirm_new_password: str
+
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "new_password": "newpass123",
+                "confirm_new_password": "newpass123"
+            }
+        }
+    }
