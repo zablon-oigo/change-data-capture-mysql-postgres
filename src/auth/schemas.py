@@ -55,3 +55,7 @@ class UserBooksModel(UserModel):
 
 class EmailModel(BaseModel):
     addresses : List[str]
+
+
+class PasswordResetRequestModel(BaseModel):
+    email: str
