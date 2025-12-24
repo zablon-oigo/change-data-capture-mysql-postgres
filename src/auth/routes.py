@@ -143,6 +143,16 @@ async def login_users(
     )
 
 
+@auth_router.get("/refresh_token", status_code=status.HTTP_200_OK)
+async def get_new_access_token(
+    token_details: dict = Depends(refresh_token_bearer)
+):
+    expiry_timestamp = token_details.get("exp")
+    if not expiry_timestamp:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token payload"
+        )
 
 
 
