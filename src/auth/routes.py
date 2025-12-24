@@ -171,6 +171,12 @@ async def get_new_access_token(
 
 
 
-
-
+@auth_router.post("/logout", status_code=status.HTTP_200_OK)
+async def logout(token_data: dict = Depends(access_token_bearer)):
+    jti = token_data['jti']
+    await add_jti_to_blocklist(jti)
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content={"message": "Logged out successfully"}
+    )
 
