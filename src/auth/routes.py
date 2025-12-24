@@ -154,6 +154,21 @@ async def get_new_access_token(
             detail="Invalid token payload"
         )
 
+    token_expiry = datetime.fromtimestamp(expiry_timestamp, tz=timezone.utc)
+    now_utc = datetime.now(timezone.utc)
+
+    if token_expiry < now_utc:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Refresh token expired or invalid"
+        )
+
+    new_access_token = create_access_token(user_data=token_details["user"])
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content={"access_token": new_access_token}
+    )
+
 
 
 
