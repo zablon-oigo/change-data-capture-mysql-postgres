@@ -255,4 +255,8 @@ async def reset_account_password(
             content={"message": "Password reset Successfully"},
             status_code=status.HTTP_200_OK,
         )
+    return JSONResponse(
+        content={"message": "Error occured during password reset."},
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    )
 
