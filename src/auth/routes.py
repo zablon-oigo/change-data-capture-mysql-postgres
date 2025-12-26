@@ -238,3 +238,7 @@ async def reset_account_password(
         raise HTTPException(
             detail="Passwords do not match", status_code=status.HTTP_400_BAD_REQUEST
         )
+    token_data = decode_url_safe_token(token)
+
+    user_email = token_data.get("email")
+    
