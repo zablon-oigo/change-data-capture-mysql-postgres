@@ -180,3 +180,10 @@ async def logout(token_data: dict = Depends(access_token_bearer)):
         content={"message": "Logged out successfully"}
     )
 
+@auth_router.get("/all-users", response_model=list[UserModel])
+async def get_all_users(
+    _: bool = Depends(admin_checker), 
+    session: AsyncSession = Depends(get_session)
+):
+    users = await user_service.get_all_users(session)
+    return users or []
