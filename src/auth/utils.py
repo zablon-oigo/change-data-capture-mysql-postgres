@@ -13,3 +13,8 @@ serializer = URLSafeTimedSerializer(
     secret_key=Config.JWT_SECRET, 
     salt="email-configuration"
 )
+
+passwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+def generate_password_hash(password: str) -> str:
+    return passwd_context.hash(password)
