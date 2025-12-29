@@ -36,3 +36,15 @@ def decode_token(token: str) -> dict | None:
     except Exception as e:
         logging.exception("Unknown error decoding JWT", exc_info=e)
         return None
+
+
+
+def create_url_safe_token(data: dict) -> str:
+
+    try:
+        token = serializer.dumps(data)
+        return token
+    except Exception as e:
+        logging.error(f"Error creating token: {str(e)}")
+        raise HTTPException(status_code=500, detail="Could not create token")
+
