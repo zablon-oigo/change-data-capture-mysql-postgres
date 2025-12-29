@@ -48,3 +48,16 @@ def create_url_safe_token(data: dict) -> str:
         logging.error(f"Error creating token: {str(e)}")
         raise HTTPException(status_code=500, detail="Could not create token")
 
+def decode_url_safe_token(token: str, max_age: int = 3600) -> dict:
+    
+    try:
+        data = serializer.loads(token, max_age=max_age)
+        return data
+    except SignatureExpired:
+        raise HTTPException(status_code=400, detail="Token has expired")
+    except BadSignature:
+        raise HTTPException(status_code=400, detail="Invalid token")
+    except Exception as e:
+        logging.exception("Unknown error decoding token", exc_info=e)
+        raise HTTPException(status_code=500, detail="Could not decode token")
+
