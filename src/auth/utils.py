@@ -22,3 +22,17 @@ def generate_password_hash(password: str) -> str:
 def verify_password(password: str, hashed_password: str) -> bool:
     return passwd_context.verify(password, hashed_password)
 
+def decode_token(token: str) -> dict | None:
+    try:
+        payload = jwt.decode(
+            jwt=token,
+            key=Config.JWT_SECRET,
+            algorithms=[Config.JWT_ALGORITHM]
+        )
+        return payload
+    except jwt.PyJWTError as jwte:
+        logging.exception("JWT decode error", exc_info=jwte)
+        return None
+    except Exception as e:
+        logging.exception("Unknown error decoding JWT", exc_info=e)
+        return None
