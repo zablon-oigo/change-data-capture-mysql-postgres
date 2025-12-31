@@ -54,3 +54,24 @@ class BookTag(SQLModel, table=True):
         sa_column=Column(mysql.CHAR(36), ForeignKey("tags.uid"))
     )
 
+
+
+
+class Tag(SQLModel, table=True):
+    __tablename__ = "tags"
+
+    uid: str = Field(
+        sa_column=Column(mysql.CHAR(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    )
+    name: str = Field(sa_column=Column(mysql.VARCHAR(255), nullable=False))
+    created_at: datetime = Field(sa_column=Column(mysql.DATETIME, default=datetime.utcnow))
+
+    books: List["Book"] = Relationship(
+        link_model=BookTag,
+        back_populates="tags",
+        sa_relationship_kwargs={"lazy": "selectin"},
+    )
+
+    def __repr__(self) -> str:
+        return f"<Tag {self.name}>"
+
