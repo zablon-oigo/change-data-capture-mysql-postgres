@@ -106,4 +106,28 @@ class Book(SQLModel, table=True):
         return f"<Book {self.title}>"
 
 
+class Review(SQLModel, table=True):
+    __tablename__ = "reviews"
+
+    uid: str = Field(
+        sa_column=Column(
+            mysql.CHAR(36),
+            primary_key=True,
+            unique=True,
+            nullable=False,
+            default=lambda: str(uuid.uuid4())
+        )
+    )
+    rating: int = Field(sa_column=Column(mysql.TINYINT, nullable=False))
+    review_text: str = Field(sa_column=Column(mysql.VARCHAR(1000), nullable=False))
+    user_uid: Optional[str] = Field(sa_column=Column(mysql.CHAR(36), ForeignKey("users.uid")))
+    book_uid: Optional[str] = Field(sa_column=Column(mysql.CHAR(36), ForeignKey("books.uid")))
+    created_at: datetime = Field(sa_column=Column(mysql.DATETIME, nullable=False, server_default=func.now()))
+    updated_at: datetime = Field(sa_column=Column(mysql.DATETIME, nullable=False, server_default=func.now(), onupdate=func.now()))
+
+    user: Optional[User] = Relationship(back_populates="reviews")
+    book: Optional[Book] = Relationship(back_populates="reviews")
+
+    def __repr__(self):
+        return f"<Review for book {self.book_uid} by user {self.user_uid}>"
 
