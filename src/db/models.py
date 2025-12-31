@@ -34,4 +34,23 @@ class User(SQLModel, table=True):
     def __repr__(self):
         return f"<User {self.username}>"
     
-    
+
+
+class BookTag(SQLModel, table=True):
+    __tablename__ = "book_tags"
+
+    uid: str = Field(
+        sa_column=Column(
+            mysql.CHAR(36), 
+            primary_key=True, 
+            default=lambda: str(uuid.uuid4())
+        )
+    )
+
+    book_id: str = Field(
+        sa_column=Column(mysql.CHAR(36), ForeignKey("books.uid"))
+    )
+    tag_id: str = Field(
+        sa_column=Column(mysql.CHAR(36), ForeignKey("tags.uid"))
+    )
+
