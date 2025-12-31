@@ -75,3 +75,35 @@ class Tag(SQLModel, table=True):
     def __repr__(self) -> str:
         return f"<Tag {self.name}>"
 
+
+class Book(SQLModel, table=True):
+    __tablename__ = "books"
+
+    uid: str = Field(
+        sa_column=Column(
+            mysql.CHAR(36),
+            primary_key=True,
+            unique=True,
+            nullable=False,
+            default=lambda: str(uuid.uuid4())
+        )
+    )
+    title: str = Field(sa_column=Column(mysql.VARCHAR(255), nullable=False))
+    author: str = Field(sa_column=Column(mysql.VARCHAR(255), nullable=False))
+    publisher: Optional[str] = Field(sa_column=Column(mysql.VARCHAR(255), nullable=True))
+    published_date: Optional[str] = Field(sa_column=Column(mysql.VARCHAR(50), nullable=True))
+    page_count: Optional[int] = Field(sa_column=Column(mysql.INTEGER, nullable=True))
+    language: Optional[str] = Field(sa_column=Column(mysql.VARCHAR(50), nullable=True))
+    user_uid: Optional[str] = Field(sa_column=Column(mysql.CHAR(36), ForeignKey("users.uid")))
+    created_at: datetime = Field(sa_column=Column(mysql.DATETIME, nullable=False, server_default=func.now()))
+    updated_at: datetime = Field(sa_column=Column(mysql.DATETIME, nullable=False, server_default=func.now(), onupdate=func.now()))
+
+    user: Optional[User] = Relationship(back_populates="books")
+    reviews: List["Review"] = Relationship(back_populates="book", sa_relationship_kwargs={"lazy": "selectin"})
+    tags: List[Tag] = Relationship(link_model=BookTag, back_populates="books", sa_relationship_kwargs={"lazy": "selectin"})
+
+    def __repr__(self):
+        return f"<Book {self.title}>"
+
+
+
