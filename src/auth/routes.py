@@ -1,20 +1,18 @@
-from fastapi import APIRouter, Depends, status, HTTPException,BackgroundTasks
+from fastapi import APIRouter, Depends, status, HTTPException
 from sqlmodel.ext.asyncio.session import AsyncSession
 from fastapi.responses import JSONResponse
 from datetime import datetime, timedelta, timezone
 
-from src import mail
 from src.db.main import get_session
 from src.db.redis import add_jti_to_blocklist
 from .schemas import PasswordResetConfirmModel, PasswordResetRequestModel, UserCreateModel, UserLoginModel, UserModel, UserBooksModel
 from .services import UserService
 from .utils import verify_password, create_access_token, generate_password_hash
 from src.celery import send_email  
-from src.mail import create_message
-from src.auth.schemas import EmailModel,SignupResponseModel
+from src.auth.schemas import SignupResponseModel
 from src.errors import UserNotFound, UserAlreadyExists
 from src.config import Config
-from src.mail import mail, create_message
+
 
 from src.auth.utils import (
     create_url_safe_token,
@@ -65,7 +63,7 @@ async def create_user_account(
     send_email.delay([email], "Verify Your Email", html)
 
     return {
-        "message": "Account created,Check your email to verify your account.",
+        "message": "Account created.Check your email to verify your account.",
         "user": new_user,
     }
 
