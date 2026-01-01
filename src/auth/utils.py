@@ -2,7 +2,7 @@ import uuid
 import logging
 from datetime import datetime, timedelta
 from itsdangerous import URLSafeTimedSerializer
-from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
+from itsdangerous import BadSignature, SignatureExpired
 from fastapi import HTTPException
 
 import jwt
@@ -21,6 +21,21 @@ def generate_password_hash(password: str) -> str:
 
 def verify_password(password: str, hashed_password: str) -> bool:
     return passwd_context.verify(password, hashed_password)
+
+
+def create_access_token(user_data: dict, expiry: timedelta = None, refresh: bool = False) -> str:
+    payload = {
+        "user": user_data,
+        "exp": datetime.utcnow() + (expiry if expiry is not None else timedelta(minutes=60)),
+        "jti": str(uuid.uuid4()),
+        "refresh": refresh
+    }
+    token = jwt.encode(
+        payload=payload,
+        key=Config.JWT_SECRET,
+        algorithm=Config.JWT_ALGORITHM
+    )
+    return token
 
 def decode_token(token: str) -> dict | None:
     try:
@@ -49,7 +64,7 @@ def create_url_safe_token(data: dict) -> str:
         raise HTTPException(status_code=500, detail="Could not create token")
 
 def decode_url_safe_token(token: str, max_age: int = 3600) -> dict:
-    
+
     try:
         data = serializer.loads(token, max_age=max_age)
         return data
@@ -60,4 +75,4 @@ def decode_url_safe_token(token: str, max_age: int = 3600) -> dict:
     except Exception as e:
         logging.exception("Unknown error decoding token", exc_info=e)
         raise HTTPException(status_code=500, detail="Could not decode token")
-
+    
