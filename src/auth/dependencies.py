@@ -22,7 +22,6 @@ user_service = UserService()
 
 
 class TokenBearer(HTTPBearer):
-    """Base class for verifying tokens in request headers."""
 
     def __init__(self, auto_error: bool = True):
         super().__init__(auto_error=auto_error)
@@ -50,7 +49,6 @@ class TokenBearer(HTTPBearer):
 
 
 class AccessTokenBearer(TokenBearer):
-    """Validates that the provided token is an access token."""
 
     def verify_token_data(self, token_data: dict) -> None:
         if token_data.get("refresh", False):
@@ -58,7 +56,6 @@ class AccessTokenBearer(TokenBearer):
 
 
 class RefreshTokenBearer(TokenBearer):
-    """Validates that the provided token is a refresh token."""
 
     def verify_token_data(self, token_data: dict) -> None:
         if not token_data.get("refresh", False):
@@ -69,7 +66,6 @@ async def get_current_user(
     token_details: dict = Depends(AccessTokenBearer()),
     session: AsyncSession = Depends(get_session),
 ) -> User:
-    """Fetch the currently authenticated user using token details."""
     user_email = token_details["user"]["email"]
 
     user = await user_service.get_user_by_email(user_email, session)
