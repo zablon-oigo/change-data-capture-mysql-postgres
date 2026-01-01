@@ -9,12 +9,10 @@ from datetime import datetime
 
 class UserService:
     async def get_user_by_email(self, email: str, session: AsyncSession) -> User | None:
-        """Fetch a user by email."""
         statement = select(User).where(User.email == email)
         result = await session.exec(statement)
         return result.first()
     async def user_exists(self, email: str, session: AsyncSession) -> bool:
-        """Check if a user already exists."""
         user = await self.get_user_by_email(email, session)
         return user is not None
 
@@ -22,10 +20,8 @@ class UserService:
         result = await session.execute(select(User))
         users = result.scalars().all()
         return users
-    
 
     async def create_user(self, user_data: UserCreateModel, session: AsyncSession) -> User:
-        """Create a new user account."""
         user_dict = user_data.model_dump()
         new_user = User(
             uid=str(uuid.uuid4()),                
@@ -52,9 +48,6 @@ class UserService:
         return user
     
     async def delete_user(self, user_uid: str, session: AsyncSession) -> bool:
-            """
-            Delete a user by UID.
-            """
             result = await session.execute(select(User).where(User.uid == user_uid))
             user = result.scalar_one_or_none()
 
