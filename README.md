@@ -72,7 +72,8 @@ bin/connect-distributed.sh config/connect-distributed.properties
 ```
 Check kafka brokers status
 ```bash
-bin/kafka-broker-api-versions.sh  --bootstrap-server localhost:9095 describe  # change port according to your broker
+# change port according to your kafka cluster
+bin/kafka-broker-api-versions.sh  --bootstrap-server localhost:9095 describe  
 ```
 Run FastAPI in development mode
 ```bash
