@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Optional
 import uuid
 from sqlmodel import SQLModel, Field, Column, Relationship
@@ -25,8 +25,8 @@ class User(SQLModel, table=True):
     role: str = Field(sa_column=Column(mysql.VARCHAR(20), nullable=False, server_default="user"))
     is_verified: bool = Field(sa_column=Column(mysql.BOOLEAN, default=False))
     password_hash: str = Field(sa_column=Column(mysql.VARCHAR(255), nullable=False))
-    created_at: datetime = Field(sa_column=Column(mysql.DATETIME, nullable=False, default=datetime.utcnow))
-    updated_at: datetime = Field(sa_column=Column(mysql.DATETIME, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow))
+    created_at: datetime = Field(sa_column=Column(mysql.DATETIME, nullable=False, default=datetime.now(timezone.utc)))
+    updated_at: datetime = Field(sa_column=Column(mysql.DATETIME, nullable=False, default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc)))
 
     books: List["Book"] = Relationship(back_populates="user", sa_relationship_kwargs={"lazy": "selectin"})
     reviews: List["Review"] = Relationship(back_populates="user", sa_relationship_kwargs={"lazy": "selectin"})
@@ -64,7 +64,7 @@ class Tag(SQLModel, table=True):
         sa_column=Column(mysql.CHAR(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     )
     name: str = Field(sa_column=Column(mysql.VARCHAR(255), nullable=False))
-    created_at: datetime = Field(sa_column=Column(mysql.DATETIME, default=datetime.utcnow))
+    created_at: datetime = Field(sa_column=Column(mysql.DATETIME, default=datetime.now(timezone.utc)))
 
     books: List["Book"] = Relationship(
         link_model=BookTag,
