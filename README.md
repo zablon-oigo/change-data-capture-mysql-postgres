@@ -75,6 +75,18 @@ Check kafka brokers status
 # change port according to your kafka cluster
 bin/kafka-broker-api-versions.sh  --bootstrap-server localhost:9095 describe  
 ```
+## Registering connectors
+
+register MySQL source
+```bash
+curl -X POST -H "Content-Type: application/json" --data @connectors/mysql-source-connector.json http://localhost:8083/connectors
+```
+
+register PostgreSQL sink
+```bash
+curl -X POST -H "Content-Type: application/json" --data @connectors/postgres-sink-connector.json http://localhost:8083/connectors
+```
+
 Run FastAPI in development mode
 ```bash
 fastapi dev 
