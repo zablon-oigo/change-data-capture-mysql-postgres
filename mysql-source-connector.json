@@ -1,0 +1,29 @@
+{
+  "name": "source",
+  "config": {
+    "connector.class": "io.debezium.connector.mysql.MySqlConnector",
+    "tasks.max": "1",
+
+    "database.hostname": "localhost",
+    "database.port": "3306",
+    "database.user": "debezium",
+    "database.password": "Pass123@",
+    "database.server.id": "1",
+
+    "topic.prefix": "data",
+
+    "database.include.list": "lib",
+    "table.include.list": "lib.users,lib.tags,lib.reviews,lib.books,lib.book_tags",
+
+    "schema.history.internal.kafka.bootstrap.servers": "localhost:9095,localhost:9097,localhost:9102",
+    "schema.history.internal.kafka.topic": "schema-changes.lib",
+
+    "include.schema.changes": "true",
+
+    "key.converter": "io.confluent.connect.avro.AvroConverter",
+    "value.converter": "io.confluent.connect.avro.AvroConverter",
+    "key.converter.schema.registry.url": "http://localhost:8081",
+    "value.converter.schema.registry.url": "http://localhost:8081"
+  }
+}
+
