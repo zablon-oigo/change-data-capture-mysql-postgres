@@ -72,8 +72,7 @@ bin/connect-distributed.sh config/connect-distributed.properties
 ```
 Check kafka brokers status
 ```bash
-# change port according to your kafka cluster
-bin/kafka-broker-api-versions.sh  --bootstrap-server localhost:9095 describe  
+bin/kafka-broker-api-versions.sh  --bootstrap-server localhost:9092 describe  
 ```
 ## Registering connectors
 
@@ -95,5 +94,31 @@ Check health
 ```bash
 curl http://localhost:8000
 ```
+In a different tab start celery
+```bash
+celery -A src.celery.c_app --loglevel=INFO
+```
+Try to post data
+```bash
+
+curl -X POST http://localhost:8000/api/v1/auth/signup \
+     -H "Content-Type: application/json" \
+     -d '{"email":"test@mail.com", "password":"Pass!@#", "username":"testuser"}'
+
+```
+Check mail to verify and login
+```bash
+curl -X POST http://localhost:8000/api/v1/auth/verify/{token}
+curl -X POST http://localhost:8000/api/v1/auth/login -d '{"username":"testuser","password":"Pass!@#"}'
+```
+#### Test Data Changes
 
 
+Observe Avro Messages
+Since the data is serialized in Avro, use the specific console consumer to read data:
+```bash
+bin/kafka-avro-console-consumer --bootstrap-server localhost:9092 \
+  --property map.deep.nulls=true \
+  --property schema.registry.url=http://localhost:8081 \
+  --topic data.lib.users --from-beginning
+```
