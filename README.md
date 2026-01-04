@@ -30,16 +30,37 @@ cd change-data-capture-mysql-postgres
 uv sync
 source .venv/bin/activate
 ```
-2.Database Preparation
 
-MySQL configuration: Debezium requires the MySQL binary log to be enabled. Add these lines to your __my.cnf__ file:
+#### Database Preparation
+
+1.MySQL configuration
+ 
+Debezium requires the MySQL binary log to be enabled. Add these lines to your __mysqld.cnf__ file.
+
 ```bash
 server-id         = 1
 log_bin           = mysql-bin
 binlog_format     = ROW
 binlog_row_image  = FULL
 ```
-3.Initialize Databases
+2.Restart MySQL
+
+```bash
+sudo systemctl restart mysql
+sudo systemctl status mysql
+```
+3.Create a new user
+
+```bash
+CREATE USER 'debezium'@'localhost' IDENTIFIED BY 'Pass123';
+```
+4.Assign user privileges
+
+```bash
+GRANT SELECT, RELOAD, SHOW DATABASES, REPLICATION SLAVE, REPLICATION CLIENT
+ON *.* TO 'debezium'@'localhost';
+```
+5.Initialize Databases
 ```bash
 -- MySQL
 CREATE DATABASE lib;
@@ -47,7 +68,9 @@ CREATE DATABASE lib;
 -- PostgreSQL
 CREATE DATABASE lib;
 ```
-4.Kafka Connect & Plugins
+#### Kafka Connect
+
+1.Kafka Connect & Plugins
 
 Install the required connectors into your Kafka directory:
      
@@ -62,25 +85,23 @@ export KAFKA_HOME=/opt/kafka
 # Move the extracted folders to your plugin path
 sudo mv debezium-connector-mysql $KAFKA_HOME/plugins/
 sudo mv kafka-connect-jdbc $KAFKA_HOME/libs/
-
 ```
 
-5.Update properties 
+2.Update properties 
 
 Edit $KAFKA_HOME/config/connect-distributed.properties to include your plugin path.
+
 ```bash
 plugin.path=/opt/kafka/libs,/opt/kafka/plugins
 ```
 
-#### Start Kafka Connect
-
 Open separate terminal tab.
 
-1.Check kafka brokers status
+3.Check kafka brokers status
 ```bash
 bin/kafka-broker-api-versions.sh  --bootstrap-server localhost:9092 describe  
 ```
-2.kafka connect
+4.Start kafka connect
 ```bash
 bin/connect-distributed.sh config/connect-distributed.properties
 ```
@@ -121,6 +142,7 @@ fastapi dev
 curl http://localhost:8000
 ```
 3.Celery Worker
+
 In a different tab start celery
 ```bash
 celery -A src.celery.c_app --loglevel=INFO
