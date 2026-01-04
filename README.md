@@ -71,16 +71,16 @@ Edit $KAFKA_HOME/config/connect-distributed.properties to include your plugin pa
 ```bash
 plugin.path=/opt/kafka/libs,/opt/kafka/plugins
 ```
-6.Start Kafka Connect
+
+#### Start Kafka Connect
 
 Open separate terminal tab.
 
-Check kafka brokers status
+1.Check kafka brokers status
 ```bash
 bin/kafka-broker-api-versions.sh  --bootstrap-server localhost:9092 describe  
 ```
-
-7.kafka connect
+2.kafka connect
 ```bash
 bin/connect-distributed.sh config/connect-distributed.properties
 ```
