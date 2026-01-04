@@ -52,7 +52,7 @@ sudo systemctl status mysql
 3.Create a new user
 
 ```bash
-CREATE USER 'debezium'@'localhost' IDENTIFIED BY 'Pass123';
+CREATE USER 'debezium'@'localhost' IDENTIFIED BY 'Pass123@';
 ```
 4.Assign user privileges
 
@@ -89,25 +89,19 @@ sudo mv kafka-connect-jdbc $KAFKA_HOME/libs/
 
 2.Update properties 
 
-Edit $KAFKA_HOME/config/connect-distributed.properties to include your plugin path.
+Edit **$KAFKA_HOME/config/connect-distributed.properties** to include your plugin path.
 
 ```bash
 plugin.path=/opt/kafka/libs,/opt/kafka/plugins
 ```
-
-Open separate terminal tab.
-
-3.Check kafka brokers status
-```bash
-bin/kafka-broker-api-versions.sh  --bootstrap-server localhost:9092 describe  
-```
 4.Start kafka connect
+
+Open a separate terminal tab.
 ```bash
 bin/connect-distributed.sh config/connect-distributed.properties
 ```
 
 #### Registering connectors
-Open separate terminal tab.
 
 Use curl to register your source and sink.
 
