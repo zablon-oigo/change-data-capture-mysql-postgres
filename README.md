@@ -109,26 +109,29 @@ curl -s http://localhost:8083/connectors | jq
 ```bash
 curl -s http://localhost:8083/connectors?expand=status | jq
 ```
+#### FastAPI Application
 
-Run FastAPI in development mode
+1.Run FastAPI in development mode
+
 ```bash
 fastapi dev 
 ```
-Check health
+2.Check health
 ```bash
 curl http://localhost:8000
 ```
+3.Celery Worker
 In a different tab start celery
 ```bash
 celery -A src.celery.c_app --loglevel=INFO
 ```
-Try to post data
-```bash
+#### Testing the API
 
+1.Register a user
+```bash
 curl -X POST http://localhost:8000/api/v1/auth/signup \
      -H "Content-Type: application/json" \
      -d '{"email":"test@mail.com", "password":"Pass!@#", "username":"testuser"}'
-
 ```
 Check mail to verify and login
 ```bash
