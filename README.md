@@ -20,8 +20,8 @@ Before running the project, ensure you have the following installed:
 | cURL |  Latest     |Command-line tool used to transfer data  |
 
 
-### Setup Setup
-Clone and Initialize the project
+### Setup Guide
+1.Clone and Initialize the project
 ```bash
 git clone https://github.com/zablon-oigo/change-data-capture-mysql-postgres.git
 cd change-data-capture-mysql-postgres
@@ -30,15 +30,16 @@ cd change-data-capture-mysql-postgres
 uv sync
 source .venv/bin/activate
 ```
-Database Preparation
-- MySQL Configuration: Debezium requires the MySQL binary log to be enabled. Add these lines to your my.cnf file:
+2.Database Preparation
+
+MySQL configuration: Debezium requires the MySQL binary log to be enabled. Add these lines to your __my.cnf__ file:
 ```bash
 server-id         = 1
 log_bin           = mysql-bin
 binlog_format     = ROW
 binlog_row_image  = FULL
 ```
-Initialize Databases
+3.Initialize Databases
 ```bash
 -- MySQL
 CREATE DATABASE lib;
@@ -46,10 +47,13 @@ CREATE DATABASE lib;
 -- PostgreSQL
 CREATE DATABASE lib;
 ```
-Kafka Connect & Plugins
-- Install the required connectors into your Kafka directory:
-     - [mysql debezium connector](https://www.confluent.io/hub/debezium/debezium-connector-mysql)
-     - [jdbc sink connector](https://www.confluent.io/hub/confluentinc/kafka-connect-jdbc)
+4.Kafka Connect & Plugins
+
+Install the required connectors into your Kafka directory:
+     
+- [mysql debezium connector](https://www.confluent.io/hub/debezium/debezium-connector-mysql)
+    
+- [jdbc sink connector](https://www.confluent.io/hub/confluentinc/kafka-connect-jdbc)
 ```bash
 # Define your Kafka path
 export KAFKA_HOME=/opt/kafka 
@@ -61,29 +65,49 @@ sudo mv kafka-connect-jdbc $KAFKA_HOME/libs/
 
 ```
 
-Update properties in connect-distributed.properties file inside config.
+5.Update properties 
 
+Edit $KAFKA_HOME/config/connect-distributed.properties to include your plugin path.
 ```bash
 plugin.path=/opt/kafka/libs,/opt/kafka/plugins
 ```
-Start Kafka Connect
-```bash
-bin/connect-distributed.sh config/connect-distributed.properties
-```
+6.Start Kafka Connect
+
+Open separate terminal tab.
+
 Check kafka brokers status
 ```bash
 bin/kafka-broker-api-versions.sh  --bootstrap-server localhost:9092 describe  
 ```
-## Registering connectors
 
-register MySQL source
+7.kafka connect
+```bash
+bin/connect-distributed.sh config/connect-distributed.properties
+```
+
+#### Registering connectors
+Open separate terminal tab.
+
+Use curl to register your source and sink.
+
+1.Register MySQL Source:
 ```bash
 curl -X POST -H "Content-Type: application/json" --data @connectors/mysql-source-connector.json http://localhost:8083/connectors
 ```
 
-register PostgreSQL sink
+2.Register PostgreSQL Sink:
 ```bash
 curl -X POST -H "Content-Type: application/json" --data @connectors/postgres-sink-connector.json http://localhost:8083/connectors
+```
+
+#### Verification & Monitoring
+1.List connectors
+```bash
+curl -s http://localhost:8083/connectors | jq
+```
+2.Check Connector Status
+```bash
+curl -s http://localhost:8083/connectors?expand=status | jq
 ```
 
 Run FastAPI in development mode
