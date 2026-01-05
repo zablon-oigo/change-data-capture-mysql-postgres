@@ -3,6 +3,7 @@
 This project demonstrates a real-time Change Data Capture pipeline. It captures data changes (Inserts, Updates, Deletes) from a MySQL source and streams them into PostgreSQL using Apache Kafka, Debezium, and Avro serialization.
 
 #### Architecture Diagram
+<img width="1263" height="321" alt="cdc" src="https://github.com/user-attachments/assets/75cdc0d3-4985-47dc-bd28-cb8bfd589047" />
 
 #### Prerequisites
 
