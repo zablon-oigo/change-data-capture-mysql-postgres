@@ -30,6 +30,13 @@ cd change-data-capture-mysql-postgres
 uv sync
 source .venv/bin/activate
 ```
+2.Create a kafka topic
+```bash
+bin/kafka-topics.sh --create --topic data \
+  --bootstrap-server localhost:9092 \
+  --partitions 3 \
+  --replication-factor 1
+```
 
 #### Database Preparation
 
@@ -227,3 +234,8 @@ bin/kafka-avro-console-consumer --bootstrap-server localhost:9092 \
   --property schema.registry.url=http://localhost:8081 \
   --topic data.lib.users --from-beginning
 ```
+
+#### Read on Medium
+
+[Change Data Capture (CDC): Streaming MySQL Changes to PostgreSQL in Real Time.](https://medium.com/@zablon-oigo/change-data-capture-cdc-streaming-mysql-changes-to-postgresql-in-real-time-44419c2be0f2)
+
